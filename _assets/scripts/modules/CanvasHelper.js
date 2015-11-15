@@ -14,15 +14,15 @@ module.exports = (function(){
 		return this.ctx;
 	}
 
-	CanvasHelper.prototype.drawRect = function(options) {
-		this.ctx.fillStyle = options.fillStyle;
-		this.ctx.fillRect(options.left, options.top, options.width, options.height);
+	CanvasHelper.prototype.drawRect = function({left, top, width: w, height: h, fillStyle: fill}) {
+		this.ctx.fillStyle = fill;
+		this.ctx.fillRect(left, top, w, h);
 	};
 
-	CanvasHelper.prototype.drawCircle = function (options) {
-		this.ctx.fillStyle = options.fillStyle;
+	CanvasHelper.prototype.drawCircle = function ({left, top, radius, fillStyle: fill}) {
+		this.ctx.fillStyle = fill;
 		this.ctx.beginPath();
-		this.ctx.arc(options.left,options.top,options.radius,0,Math.PI*2);
+		this.ctx.arc(left, top, radius, 0, Math.PI*2);
 		this.ctx.fill();
 	}
 
