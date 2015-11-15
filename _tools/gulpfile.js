@@ -52,33 +52,34 @@ gulp.task('clean:css', function() {
 gulp.task('clean', ['clean:sourcemaps', 'clean:libs', 'clean:dependencies', 'clean:js', 'clean:css']);
 
 gulp.task('javascript', function() {
-	return 	browserify('../_assets/scripts/app.js')
-			.bundle()
+	return 	browserify('../_assets/scripts/app.js').bundle()
+			.on('error', console.log)
 			.pipe(source('app.js'))
 			.pipe(buffer())
 			.pipe($.sourcemaps.init())
 			.pipe($.plumber())
+			.pipe($.babel({presets: ['es2015']}))
 			.pipe($.addSrc('../_assets/scripts/lib/*.js'))
-			.pipe($.uglify())
+			//.pipe($.uglify())
 			.pipe($.concat('app.js'))
 			.pipe($.plumber.stop())
 			.pipe($.sourcemaps.write("../_sourcemaps"))
 			.pipe(gulp.dest('../_site/js'))
 			.pipe(browserSync.stream({match: '**/*.js'}));
-			//.pipe($.notify("Browser reloaded"));
 });
 
 gulp.task('server:start', function() {
 	browserSync.init({
 		server: {
 			baseDir: '../_site/'
-		}
+		},
+		open: false
 	});
 });
 
 gulp.task('watch', ['server:start'], function() {
 	gulp.watch(["../_assets/styles/**/*.sass", "../_assets/styles/**/*.scss"], ['sass']);
-	gulp.watch("../_assets/scripts/*.js", ['javascript']);
+	gulp.watch("../_assets/scripts/**/*.js", ['javascript'], browserSync.reload);
 	gulp.watch('../_assets/views/*.jade', ['jade']);
 });
 
